@@ -1,0 +1,45 @@
+{
+  "name": "fleetly-client",
+  "version": "0.1.0",
+  "private": true,
+  "author": "Trevor Kimenye",
+  "dependencies": {
+    "@testing-library/jest-dom": "^4.2.4",
+    "@testing-library/react": "^9.3.2",
+    "@testing-library/user-event": "^7.1.2",
+    "clsx": "^1.1.1",
+    "react": "^16.14.0",
+    "react-dom": "^16.14.0",
+    "react-router-dom": "^5.2.0",
+    "react-scripts": "3.4.3",
+    "tailwindcss": "^1.9.4",
+    "@fullhuman/postcss-purgecss": "^3.0.0",
+    "postcss-cli": "^8.1.0"
+  },
+  "scripts": {
+    "postinstall": "npm run build",
+    "tailwind:build": "NODE_ENV=production postcss src/tailwind.css -o src/tailwind.output.css",
+    "tailwind:dev": "postcss src/tailwind.css -o src/tailwind.output.css",
+    "prestart": "npm run tailwind:dev",
+    "prebuild": "npm run tailwind:build",
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}

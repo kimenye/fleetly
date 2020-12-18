@@ -1,30 +1,31 @@
-const Koa = require("koa");
+const Koa = require('koa');
 const BodyParser = require("koa-bodyparser");
-const Router = require("koa-router");
 const Logger = require("koa-logger");
 const serve = require("koa-static");
 const mount = require("koa-mount");
 const cors = require('koa-cors');
 const HttpStatus = require("http-status");
+const indexRoutes = require('./routes/index');
 
 const app = new Koa();
+const PORT = process.env.PORT || 3000;
+
+app.use(indexRoutes.routes()).use(indexRoutes.allowedMethods());
 
 const static_pages = new Koa();
 
+// Add the client build
 const path = __dirname + "/../../client/build"
-console.log('Path', path)
 static_pages.use(serve(path));
 app.use(mount("/", static_pages))
 
-const PORT = process.env.PORT || 3000;
-
+// add middlewares
 app.use(BodyParser());
 app.use(Logger());
 app.use(cors());
 
-const router = new Router();
-
-app.use(router.routes()).use(router.allowedMethods());
-app.listen(PORT, function () {
-    console.log("==> 🌎  Listening on port %s. Visit http://localhost:%s/", PORT, PORT);
+const server = app.listen(PORT, () => {
+  console.log(`Server listening on port: ${PORT}`);
 });
+
+module.exports = server;

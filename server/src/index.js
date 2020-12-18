@@ -5,12 +5,20 @@ const serve = require("koa-static");
 const mount = require("koa-mount");
 const cors = require('koa-cors');
 const HttpStatus = require("http-status");
+
 const indexRoutes = require('./routes/index');
+const userRoutes = require('./routes/users');
 
 const app = new Koa();
 const PORT = process.env.PORT || 3000;
 
-app.use(indexRoutes.routes()).use(indexRoutes.allowedMethods());
+// add middlewares
+app.use(BodyParser());
+app.use(Logger());
+app.use(cors());
+
+app.use(indexRoutes.routes());
+app.use(userRoutes.routes());
 
 const static_pages = new Koa();
 
@@ -18,11 +26,6 @@ const static_pages = new Koa();
 const path = __dirname + "/../../client/build"
 static_pages.use(serve(path));
 app.use(mount("/", static_pages))
-
-// add middlewares
-app.use(BodyParser());
-app.use(Logger());
-app.use(cors());
 
 const server = app.listen(PORT, () => {
   console.log(`Server listening on port: ${PORT}`);

@@ -4,17 +4,19 @@
   "private": true,
   "author": "Trevor Kimenye",
   "dependencies": {
+    "@fullhuman/postcss-purgecss": "^3.0.0",
+    "@tailwindcss/forms": "^0.2.1",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
+    "axios": "^0.21.0",
     "clsx": "^1.1.1",
+    "postcss-cli": "^8.1.0",
     "react": "^16.14.0",
     "react-dom": "^16.14.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.3",
-    "tailwindcss": "^1.9.4",
-    "@fullhuman/postcss-purgecss": "^3.0.0",
-    "postcss-cli": "^8.1.0"
+    "tailwindcss": "^1.9.4"
   },
   "scripts": {
     "postinstall": "npm run build",
@@ -22,8 +24,8 @@
     "tailwind:dev": "postcss src/tailwind.css -o src/tailwind.output.css",
     "prestart": "npm run tailwind:dev",
     "prebuild": "npm run tailwind:build",
-    "start": "react-scripts start",
-    "build": "react-scripts build",
+    "start": "REACT_APP_BASE_URL=http://localhost:3000 react-scripts start",
+    "build": "REACT_APP_BASE_URL='' react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },

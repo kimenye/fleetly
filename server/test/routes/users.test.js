@@ -55,6 +55,27 @@ describe('routes : users', () => {
     })
   })
 
+  describe('PUT /api/v1/users/:id', () => {
+    it('Should be able to update a user', (done) => {
+      knex('users')
+        .select('*')
+        .where({ email: 'demo@example.com' })
+        .then((users) => {
+          let user = users[0];
+
+          chai.request(server)
+            .put(`/api/v1/users/${user.id}`)
+            .send({ name: 'Jane' })
+            .end((err, res) => {
+              should.not.exist(err);
+              let newUser = res.body.data[0]
+              newUser.name.should.not.eql(user.name);
+              done();
+            })
+        })
+    })
+  })
+
   describe('POST /api/v1/users', () => {
     it('should check if an email exists before adding to waiting list', (done) => {
 

@@ -23,9 +23,17 @@ function addUser(user) {
   .returning('*');
 }
 
+function updateUser(id, user) {
+  return knex('users')
+  .update(user)
+  .where({ id: parseInt(id) })
+  .returning('*');
+}
+
 module.exports = {
   getAllUsers,
   findByEmail,
   findByInvitationTokenAndEmail,
+  updateUser,
   addUser
 }

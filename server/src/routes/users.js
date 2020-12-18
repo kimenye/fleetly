@@ -45,10 +45,36 @@ router.get(`${BASE_URL}/invites/:id`, async (ctx) => {
 
 })
 
+// PUT /api/v1/users/:id
+router.put(`${BASE_URL}/:id`, async (ctx) => {
+  try {
+    const user = await queries.updateUser(ctx.params.id, ctx.request.body);
+    if (user.length) {
+      ctx.status = 200;
+      ctx.body = {
+        status: 'success',
+        data: user
+      };
+    } else {
+      ctx.status = 404;
+      ctx.body = {
+        status: 'error',
+        message: 'That user does not exist.'
+      };
+    }
+  }
+  catch (err) {
+    ctx.status = 400;
+    ctx.body = {
+      status: 'error',
+      message: err.message || 'Sorry, an error has occurred.'
+    };
+  }
+})
+
 // POST /api/v1/users
 router.post(`${BASE_URL}`, async (ctx) => {
   try {
-    // console.log('email', ctx.request.body.email)
     let { email } = ctx.request.body
     const exists = await queries.findByEmail(email);
 

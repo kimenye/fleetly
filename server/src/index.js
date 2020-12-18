@@ -9,6 +9,13 @@ const HttpStatus = require("http-status");
 
 const app = new Koa();
 
+const static_pages = new Koa();
+
+const path = __dirname + "/../../client/build"
+console.log('Path', path)
+static_pages.use(serve(path));
+app.use(mount("/", static_pages))
+
 const PORT = process.env.PORT || 3000;
 
 app.use(BodyParser());
@@ -16,14 +23,6 @@ app.use(Logger());
 app.use(cors());
 
 const router = new Router();
-
-router.get('/', async (ctx, next) => {
-
-  ctx.status = HttpStatus.OK;
-  ctx.body = 'Hello from Fleetly';
-  await next();
-
-})
 
 app.use(router.routes()).use(router.allowedMethods());
 app.listen(PORT, function () {

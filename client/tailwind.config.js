@@ -1,5 +1,3 @@
-const colors = require('tailwindcss/colors')
-
 module.exports = {
   future: {
     removeDeprecatedGapUtilities: true,
@@ -9,9 +7,6 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        'light-blue': colors.lightBlue,
-        'fuchsia': '#9333ea',
-        cyan: colors.cyan,
       }
     },
   },

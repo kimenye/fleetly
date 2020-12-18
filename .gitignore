@@ -105,3 +105,4 @@ dist
 
 # Hide the tailwind output
 client/src/tailwind.output.css
+client/build

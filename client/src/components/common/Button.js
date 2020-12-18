@@ -8,9 +8,9 @@ const CheckIcon = () => {
   )
 }
 
-const Button = ({ text }) => {
+const Button = ({ text, onClick }) => {
   return (
-    <button type="button" disabled className="my-2 inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-purple-700 hover:bg-purple-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:bg-purple-100">      
+    <button type="button" onClick= { onClick } className="my-2 inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-purple-700 hover:bg-purple-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:bg-purple-100">      
       { text }
     </button>
   )

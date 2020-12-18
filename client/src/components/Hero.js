@@ -1,5 +1,6 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useState } from 'react';
 import Button from './common/Button';
+import axios from 'axios';
 
 const Feature = ({ text }) => {
   return (
@@ -17,13 +18,44 @@ const Feature = ({ text }) => {
 }
 
 const SignUpForm = () => {
-  return (
-    <form>
-      <input type="email" placeholder="jane@example.com" required="true" className="mt-1 block w-full px-0.5 border-0 border-b-2 border-purple-200" />
-      <Button text='Sign Up' />
+  const [email, setEmail] = useState("")
+  const [user, setUser] = useState(null)
 
-    </form>
-  )
+  const createUser = async () => {
+    console.log('Base URL', process.env.BASE_URL)
+    const result = await axios.post("http://localhost:3000/api/v1/users", { email: email });
+    const status = result.status;
+    if (status === 201) {
+      let { data } = result.data
+      let saved = data[0]
+
+
+      setUser(saved)
+    }
+  }
+
+  function register(e) {
+    const emailValid =   /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(email)
+    if (emailValid)
+      createUser()
+    else
+      alert('Please enter a valid email to sign up')
+  }
+
+  if (user)
+    return (
+      <Fragment>
+        <h2 className="pt-6 text-base leading-6 font-bold sm:text-lg sm:leading-7 text-purple-600">Awesome! You'll be first to know when we're ready</h2>
+      </Fragment>
+    )
+  else
+    return (
+      <Fragment>
+        <input type="email" placeholder="jane@example.com" onChange={e => setEmail(e.target.value)} required={true} className="mt-1 block w-full px-0.5 border-0 border-b-2 border-purple-200 hover:border-purple-500" />
+        <Button text='Sign Up' onClick={ register } />
+      </Fragment>
+    )
+
 }
 
 function Hero() {

@@ -18,6 +18,33 @@ const BASE_URL = `/api/v1/users`;
 //   }
 // });
 
+// GET /api/v1/users/invites/0000-0000
+router.get(`${BASE_URL}/invites/:id`, async (ctx) => {
+  try {
+    let { id } = ctx.params
+    let { email } = ctx.request.query
+    const result = await queries.findByInvitationTokenAndEmail(id, email);
+
+    if (result.length) {
+      ctx.status = 200;
+      ctx.body = {
+        status: 'success',
+        data: result
+      };
+    } else {
+      ctx.status = 422
+      ctx.body = {
+        status: 'error',
+        message: 'Invalid Invitation token or email'
+      }
+    }
+  }
+  catch(err) {
+    console.log(err)
+  }
+
+})
+
 // POST /api/v1/users
 router.post(`${BASE_URL}`, async (ctx) => {
   try {

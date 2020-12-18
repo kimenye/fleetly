@@ -11,6 +11,12 @@ function findByEmail(email) {
   .where({ email: email })
 }
 
+function findByInvitationTokenAndEmail(invitation_token, email) {
+  return knex('users')
+    .select('*')
+    .where({ email: email, invitation_token: invitation_token })
+}
+
 function addUser(user) {
   return knex('users')
   .insert(user)
@@ -20,5 +26,6 @@ function addUser(user) {
 module.exports = {
   getAllUsers,
   findByEmail,
+  findByInvitationTokenAndEmail,
   addUser
 }

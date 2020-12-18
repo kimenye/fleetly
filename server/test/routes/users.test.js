@@ -38,6 +38,23 @@ describe('routes : users', () => {
     // });
   })
 
+  describe('GET /api/v1/users/invites/:id', () => {
+    it('Should verify an email and invite pair', (done) => {
+
+      let token = '0000-0000-0000-0000'
+      let email = 'demo@example.com'
+
+      chai.request(server)
+        .get(`/api/v1/users/invites/${token}?email=${email}`)
+        .end((err, res) => {
+          should.not.exist(err);
+          res.status.should.equal(200);
+          res.body.data[0].should.include.keys('id', 'email');
+          done()
+        })
+    })
+  })
+
   describe('POST /api/v1/users', () => {
     it('should check if an email exists before adding to waiting list', (done) => {
 

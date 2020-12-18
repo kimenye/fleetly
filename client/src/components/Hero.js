@@ -22,16 +22,21 @@ const SignUpForm = () => {
   const [user, setUser] = useState(null)
 
   const createUser = async () => {
-    console.log('Base URL', process.env.BASE_URL)
-    const result = await axios.post("http://localhost:3000/api/v1/users", { email: email });
-    const status = result.status;
-    if (status === 201) {
-      let { data } = result.data
-      let saved = data[0]
-
-
-      setUser(saved)
+    try {
+      const result = await axios.post(`${process.env.REACT_APP_BASE_URL}/api/v1/users`, { email: email });
+      const status = result.status;
+      if (status === 201) {
+        let { data } = result.data
+        let saved = data[0]
+        setUser(saved)
+      }
+    } catch(err) {
+      if (err.response.status == 422)
+        setUser({ email: email })
+      else
+        alert('Sorry, please try again later');
     }
+
   }
 
   function register(e) {

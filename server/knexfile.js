@@ -30,7 +30,7 @@ module.exports = {
   },
   production: {
     client: 'pg',
-    connection: `postgres://${DB_USERNAME}:${DB_PASSWORD}@${DB_HOST}:5432/${DB_NAME}`,
+    connection: process.env.DATABASE_URL,
     migrations: {
       directory: path.join(BASE_PATH, 'migrations')
     },

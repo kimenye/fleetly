@@ -1,4 +1,5 @@
 # Fleetly
+![Logo](client/public/logo.png?raw=true")
 Schedule your best performing tweets effortlessly.
 
 

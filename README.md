@@ -5,9 +5,8 @@ Schedule your best performing tweets effortlessly.
 
 ## What is Fleetly?
 
-Fleets are ephemeral tweets launched in 2020. While there is currently no official API for posting them,
-this project envisions when this will be possible and allows users to schedule them, or automate tweeting
-based on the highest engagement.
+Fleets are ephemeral tweets launched in 2020. There is currently *no Official API* for posting Fleets yet.
+For now Fleetly will advise you on your best performing tweets send you a reminder when to post as a Fleet.
 
 
 ## Requirements
@@ -28,10 +27,7 @@ cd fleetly
 
 ## Development
 
-1. To run the Web front end
+This project has two main components:
 
-```
-  cd client
-  npm install
-  npm start
-```
+* Node JS Backend built with Koa and Postgres (server)
+* JS Frontend built with React (client)

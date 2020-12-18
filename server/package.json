@@ -24,7 +24,8 @@
     "start": "node src/index.js",
     "dev": "nodemon src/index.js",
     "test": "mocha --recursive --bail --exit",
-    "db:prepare": "knex migrate:latest"
+    "db:prepare": "knex migrate:latest",
+    "postinstall": "npm run db:prepare"
   },
   "author": "Trevor Kimenye",
   "license": "MIT"

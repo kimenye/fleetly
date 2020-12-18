@@ -1,4 +1,5 @@
 const Router = require('koa-router');
+const { v4: uuidv4 } = require('uuid');
 const queries = require('../db/queries/users');
 
 const router = new Router();
@@ -24,8 +25,10 @@ router.post(`${BASE_URL}`, async (ctx) => {
     let { email } = ctx.request.body
     const exists = await queries.findByEmail(email);
 
+    let userData = { email: email, invitation_token: uuidv4() }
+
     if (!exists.length) {
-      const user = await queries.addUser(ctx.request.body);
+      const user = await queries.addUser(userData);
       if (user.length) {
 
         ctx.status = 201;

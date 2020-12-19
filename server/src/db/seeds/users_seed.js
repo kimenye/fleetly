@@ -5,7 +5,7 @@ exports.seed = function(knex) {
     .then(function () {
       // Inserts seed entries
       return knex('users').insert([
-        { email: 'demo@example.com', invitation_token: '0000-0000-0000-0000' }
+        { email: 'demo@example.com', invitation_token: '0000-0000-0000-0000', uid: 'twitter_id' }
       ]);
     });
 };

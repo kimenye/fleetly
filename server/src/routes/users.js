@@ -1,6 +1,7 @@
 const Router = require('koa-router');
 const { v4: uuidv4 } = require('uuid');
 const queries = require('../db/queries/users');
+const { getTweets } = require('../lib/twitter');
 
 const router = new Router();
 const BASE_URL = `/api/v1/users`;
@@ -75,7 +76,28 @@ router.put(`${BASE_URL}/:id`, async (ctx) => {
       message: err.message || 'Sorry, an error has occurred.'
     };
   }
-})
+});
+
+// POST /api/v1/users/:id/fetchTweets
+router.post(`${BASE_URL}/:id/fetchTweets`, async(ctx) => {
+  try {
+    let { id } = ctx.params
+    let usr = await queries.findById(id)[0]
+
+    getTweets(usr.oauth_token, usr.oauth_token_secret)
+      .then((tweets) => {
+
+      })
+
+  }
+  catch(err) {
+    ctx.status = 400;
+    ctx.body = {
+      status: 'error',
+      message: err.message || 'Sorry, an error has occurred.'
+    };
+  }
+});
 
 // POST /api/v1/users
 router.post(`${BASE_URL}`, async (ctx) => {

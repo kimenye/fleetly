@@ -1,7 +1,7 @@
 const Router = require('koa-router');
 const { v4: uuidv4 } = require('uuid');
 const queries = require('../db/queries/users');
-const { getTweets } = require('../lib/twitter');
+const { getTweets, convertJSONToTweet } = require('../lib/twitter');
 
 const router = new Router();
 const BASE_URL = `/api/v1/users`;
@@ -78,25 +78,52 @@ router.put(`${BASE_URL}/:id`, async (ctx) => {
   }
 });
 
+const convertTweets = (tweets, user_id) => {
+  return new Promise(async (resolve, reject) => {
+
+    let converted = []
+    for(idx=0;idx<tweets.length;idx++) {
+      let tweet = tweets[idx];
+
+      let twt = await convertJSONToTweet(tweet, user_id);
+      converted.push(twt)
+    }
+    resolve(converted);
+
+  });
+}
+
 // POST /api/v1/users/:id/fetchTweets
 router.post(`${BASE_URL}/:id/fetchTweets`, async(ctx) => {
+
   try {
+
+    let usr = ctx.session.user
     let { id } = ctx.params
-    let usr = await queries.findById(id)[0]
+    if (usr.id == id) {
 
-    getTweets(usr.oauth_token, usr.oauth_token_secret)
-      .then((tweets) => {
+      let tweets = await getTweets(usr.oauth_token, usr.oauth_token_secret);
+      let savedTweets = await convertTweets(tweets, usr.id);
 
-      })
-
+      ctx.status = 200;
+      ctx.body = {
+        status: 'success',
+        data: {
+          count: tweets.length,
+          tweets: savedTweets
+        }
+      }
+    }
   }
-  catch(err) {
+  catch (err) {
+    console.log('Error', err)
     ctx.status = 400;
     ctx.body = {
       status: 'error',
       message: err.message || 'Sorry, an error has occurred.'
     };
   }
+
 });
 
 // POST /api/v1/users

@@ -4,6 +4,7 @@ const router = new Router();
 const sys = require('util');
 const { getProfile } = require('../lib/twitter');
 const queries = require('../db/queries/users');
+const { getTweetsForUserId } = require('../db/queries/tweets');
 
 const consumer = () => {
   return new oauth.OAuth(
@@ -100,11 +101,15 @@ router.get('/auth/user', async (ctx) => {
 
     if (user_id) {
       const user = await queries.findById(user_id);
-      console.log('User fetched: ', user, user_id)
+      const tweets = await getTweetsForUserId(user_id);
+      let usr = user[0]
+
+      ctx.session.user = usr
       ctx.status = 200;
       ctx.body = {
         status: 'success',
-        data: user[0]
+        user: usr,
+        tweets: tweets
       };
     }
     else {

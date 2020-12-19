@@ -8,22 +8,27 @@ const HttpStatus = require("http-status");
 
 const indexRoutes = require('./routes/index');
 const userRoutes = require('./routes/users');
+const appRoutes = require('./routes/app');
 
 const app = new Koa();
 const PORT = process.env.PORT || 3000;
+// Add the client build
+const path = __dirname + "/../../client/build"
+process.env.BUILD_PATH = path;
 
 // add middlewares
 app.use(BodyParser());
 app.use(Logger());
 app.use(cors());
 
+// app routes middleware
+app.use(appRoutes);
+
 app.use(indexRoutes.routes());
 app.use(userRoutes.routes());
 
 const static_pages = new Koa();
 
-// Add the client build
-const path = __dirname + "/../../client/build"
 static_pages.use(serve(path));
 app.use(mount("/", static_pages))
 

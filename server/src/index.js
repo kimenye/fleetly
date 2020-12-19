@@ -5,7 +5,7 @@ const serve = require("koa-static");
 const mount = require("koa-mount");
 const cors = require('koa-cors');
 const HttpStatus = require("http-status");
-
+require('dotenv').config();
 const indexRoutes = require('./routes/index');
 const userRoutes = require('./routes/users');
 const appRoutes = require('./routes/app');

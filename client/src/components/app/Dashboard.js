@@ -83,18 +83,156 @@ const TopNavBar = ({ user }) => {
   )
 }
 
+const TweetRow = ({ tweet }) => {
+  return (
+    <tr>
+      <td class="px-6 py-4 whitespace-nowrap">
+        {/*<div class="flex items-center">
+          <div class="flex-shrink-0 h-10 w-10">
+            <img class="h-10 w-10 rounded-full" src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&amp;ixid=eyJhcHBfaWQiOjEyMDd9&amp;auto=format&amp;fit=facearea&amp;facepad=4&amp;w=256&amp;h=256&amp;q=60" alt="" />
+          </div>
+          <div class="ml-4">
+            <div class="text-sm font-medium text-gray-900">
+              Jane Cooper
+            </div>
+            <div class="text-sm text-gray-500">
+              jane.cooper@example.com
+            </div>
+          </div>
+        </div>*/}
+        <div className="text-sm text-gray-900">{ new Date(tweet.tweeted_at).toDateString() }</div>
+      </td>
+      <td class="px-6 py-4 whitespace-nowrap">
+        <div class="text-sm text-gray-900">{ tweet.text }</div>
+        {/*<div class="text-sm text-gray-500">Optimization</div>*/}
+      </td>
+      <td class="px-6 py-4 whitespace-nowrap">
+        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+          { tweet.retweet_count }
+        </span>
+      </td>
+      <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-red-600">
+          { tweet.favorite_count }
+        </span>
+      </td>
+      <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+        {/*<a href="#" class="text-indigo-600 hover:text-indigo-900">Edit</a>*/}
+        { tweet.source }
+      </td>
+    </tr>
+  )
+}
 
+const TweetTable = ({ tweets }) => {
+  return  (
+    <div class="flex flex-col">
+      <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+        <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
+          <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
+            <table class="min-w-full divide-y divide-gray-200">
+              <thead class="bg-gray-50">
+                <tr>
+                  <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Date
+                  </th>
+                  <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Tweet
+                  </th>
+                  <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    # RT
+                  </th>
+                  <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    # ❤️
+                  </th>
+                  <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    App
+                  </th>
+                </tr>
+              </thead>
+              <tbody class="bg-white divide-y divide-gray-200">
+                {
+                  (tweets.length < 1) &&
+                  <tr>
+                    <td colspan="5"><span className="text-center text-sm text-gray-800 py-1 block">You have no Tweets loaded yet</span></td>
+                  </tr>
+                }
+                { tweets.map((t,i) => <TweetRow tweet={t} key={i} /> )}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+const Loader = () => {
+  return (
+    <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+      <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+    </svg>
+  )
+}
+
+const LoadButton = ({ onClick, user_id }) => {
+
+  const [loading, setLoading] = useState(false);
+
+  let btnCls = cx({
+    "my-2 inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-purple-700 hover:bg-purple-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:bg-purple-100": true,
+    "cursor-wait": loading
+  })
+
+  async function loadTweets() {
+    // const result = await axios.get(`${process.env.REACT_APP_BASE_URL}/auth/user`);
+    // setUser(result.data.data)
+
+    const result = await axios.post(`${process.env.REACT_APP_BASE_URL}/api/v1/users/${user_id}/fetchTweets`)
+    console.log('Result', result);
+
+    onClick(result);
+  }
+
+  // fetchUser();
+
+  const load = async () => {
+    if (!loading) {
+      setLoading(true);
+
+      const result = await axios.post(`${process.env.REACT_APP_BASE_URL}/api/v1/users/${user_id}/fetchTweets`)
+      console.log('Result', result);
+
+      onClick(result);
+      setLoading(false);
+    }
+  }
+
+  let text = loading ? "Fetching Tweets ..." : "Load Tweets"
+
+  return (
+    <button type="button" onClick= { load } className={ btnCls }>
+      { loading && <Loader /> }
+      { text }
+    </button>
+  )
+}
 
 const Dashboard = () => {
 
-  const [user, setUser] = useState();
-  // const dispatch = useDispatch();
+  const [user, setUser] = useState({});
+  const [tweets, setTweets] = useState([]);
 
   useEffect(() => {
 
     async function fetchUser() {
       const result = await axios.get(`${process.env.REACT_APP_BASE_URL}/auth/user`);
-      setUser(result.data.data)
+      console.log('Result', result)
+      // debugger
+      const response = result.data;
+      setUser(response.user);
+      setTweets(response.tweets);
     }
 
     fetchUser();
@@ -102,7 +240,28 @@ const Dashboard = () => {
   }, [])
 
   return (
-    <TopNavBar user={user} />
+    <>
+      <TopNavBar user={user} />
+      { user && <header class="bg-white shadow">
+        <div class="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8">
+          <h1 class="text-3xl font-bold leading-tight text-gray-900">
+            Dashboard
+            <small className="block text-gray-800 text-sm font-normal">Welcome <em>{ user.name }</em> to your Fleetly Dashboard.</small>
+            {
+              (tweets.length == 0) &&
+              <div className="loadTweets">
+                <LoadButton onClick={ setTweets } user_id={ user.id } />
+              </div>
+            }
+          </h1>
+        </div>
+      </header> }
+      <main>
+        <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+          <TweetTable tweets={ tweets } />
+        </div>
+      </main>
+    </>
   )
 }
 

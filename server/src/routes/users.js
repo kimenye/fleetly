@@ -26,6 +26,11 @@ router.get(`${BASE_URL}/invites/:id`, async (ctx) => {
     const result = await queries.findByInvitationTokenAndEmail(id, email);
 
     if (result.length) {
+      // store the user in the session?
+
+      usr = result[0]
+      ctx.session.user_id = usr.id
+
       ctx.status = 200;
       ctx.body = {
         status: 'success',

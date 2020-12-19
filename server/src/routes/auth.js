@@ -2,6 +2,8 @@ const oauth = require('oauth');
 const Router = require('koa-router');
 const router = new Router();
 const sys = require('util');
+const { getProfile } = require('../lib/twitter');
+const queries = require('../db/queries/users');
 
 const consumer = () => {
   return new oauth.OAuth(
@@ -41,7 +43,8 @@ const getOauthToken = (requestToken, requestSecret, verifier) => {
         verifier,
         (err, oauthAccessToken, oauthAccessTokenSecret, results) => {
           if (err) {
-            console.log('Error in verifying', sys.inspect(err))
+            console.log('Error in verifying', err)
+            // console.log('Error in verifying', sys.inspect(err))
             reject(err)
           }
           else {
@@ -53,13 +56,22 @@ const getOauthToken = (requestToken, requestSecret, verifier) => {
 }
 
 router.get('/auth/twitter/callback', async (ctx) => {
-  // console.log('In twitter callback');
-
   try {
     let { oauth_verifier } = ctx.request.query
     result = await getOauthToken(ctx.session.twitter_token, ctx.session.twitter_secret, oauth_verifier);
-    // console.log('Result', result);
-    ctx.redirect('/app');
+    let { access_token, access_token_secret } = result
+
+    let { user_id } = ctx.session
+    if (user_id) {
+      let profile = await getProfile(access_token, access_token_secret)
+
+      const user = await queries.findById(user_id)[0];
+
+      let updatedUsr = await queries.updateUser(user_id, { uid: profile['id_str'], profile_pic_url: profile['profile_image_url_https'],
+        username: profile['screen_name'], oauth_token: access_token, oauth_token_secret: access_token_secret  })
+    }
+
+    ctx.redirect('/app/dashboard');
   }
   catch(err) {
     console.log('Error with callback', err)
@@ -69,7 +81,6 @@ router.get('/auth/twitter/callback', async (ctx) => {
 
 router.get('/auth/twitter/request', async (ctx) => {
   try {
-    // console.log('Path', process.env.HOSTPATH+'/auth/twitter/callback')
     result = await requestToken();
     // console.log('Result', result);
 

@@ -11,6 +11,12 @@ function findByEmail(email) {
   .where({ email: email })
 }
 
+function findById(id) {
+  return knex('users')
+  .select('*')
+  .where({ id: parseInt(id) })
+}
+
 function findByInvitationTokenAndEmail(invitation_token, email) {
   return knex('users')
     .select('*')
@@ -33,6 +39,7 @@ function updateUser(id, user) {
 module.exports = {
   getAllUsers,
   findByEmail,
+  findById,
   findByInvitationTokenAndEmail,
   updateUser,
   addUser

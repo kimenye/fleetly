@@ -9,6 +9,7 @@ exports.up = (knex, Promise) => {
     table.string('username');
     table.string('profile_pic_url');
     table.string('oauth_token');
+    table.string('oauth_token_secret');
     table.timestamps(false, true);
   })
 };

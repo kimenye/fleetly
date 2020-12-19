@@ -109,4 +109,16 @@ describe('routes : users', () => {
         })
     })
   })
+
+  describe('GET /auth/twitter/request', () => {
+    it('can request an oauth token', (done) => {
+      chai.request(server)
+        .get('/auth/twitter/request')
+        .redirects(0)
+        .end((err, res) => {
+          should.not.exist(err);
+          done();
+        })
+    })
+  })
 })

@@ -8,7 +8,7 @@ class App extends Component {
     return (
       <Router>
         <Route path="/" exact component={Hero} />
-        <Route path="/user/invitations/:uuid/" component={TwitterConnect} />
+        <Route path="/app/invites/:uuid/" component={TwitterConnect} />
       </Router>
     );
   }

@@ -1,7 +1,9 @@
-import React, { Fragment, useState } from 'react';
+import React, { useState } from 'react';
 import Button from '../common/Button';
 import axios from 'axios';
 import { useParams, useLocation } from "react-router-dom";
+import { withRouter } from "react-router-dom";
+
 
 const Banner = (props) => {
 
@@ -10,8 +12,7 @@ const Banner = (props) => {
   const [user, setUser] = useState(null)
   let { token } = props
 
-
-  const verifyToken = async () => {
+  const verifyToken = async (props) => {
     try {
       const result = await axios.get(`${process.env.REACT_APP_BASE_URL}/api/v1/users/invites/${token}?email=${email}`);
       const status = result.status;
@@ -22,19 +23,21 @@ const Banner = (props) => {
         const updateStatus = updateResponse.status
 
         if (status == 200) {
-          // Request the oauth redirect
+          // props.history.push('/auth/twitter/request');
+          window.location.replace("/auth/twitter/request");
         }
 
         return true
       }
     } catch(err) {
+      console.log('Error', err);
       alert('Invalid email or authentication token. Please confirm and try again');
     }
 
   }
 
   function verifyAndConnectToTwitter() {
-    verifyToken()
+    verifyToken(props)
   }
 
   return (
@@ -91,6 +94,8 @@ function useQuery() {
   return new URLSearchParams(useLocation().search);
 }
 
+const BannerWithRouter = withRouter(Banner)
+
 const TwitterConnect = () => {
 
   let { uuid } = useParams();
@@ -100,7 +105,7 @@ const TwitterConnect = () => {
   console.log('Id', uuid, email);
 
   return (
-    <Banner token={ uuid } email={ email } />
+    <BannerWithRouter token={ uuid } email={ email } />
   )
 }
 

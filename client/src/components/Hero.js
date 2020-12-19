@@ -31,7 +31,7 @@ const SignUpForm = () => {
         setUser(saved)
       }
     } catch(err) {
-      if (err.response.status == 422)
+      if (err.response.status === 422)
         setUser({ email: email })
       else
         alert('Sorry, please try again later');

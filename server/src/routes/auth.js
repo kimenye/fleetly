@@ -94,4 +94,34 @@ router.get('/auth/twitter/request', async (ctx) => {
   }
 });
 
+router.get('/auth/user', async (ctx) => {
+  try {
+    let { user_id } = ctx.session
+
+    if (user_id) {
+      const user = await queries.findById(user_id);
+      console.log('User fetched: ', user, user_id)
+      ctx.status = 200;
+      ctx.body = {
+        status: 'success',
+        data: user[0]
+      };
+    }
+    else {
+      ctx.status = 400;
+      ctx.body = {
+        status: 'error',
+        message: err.message || 'No user is available in session'
+      };
+    }
+  }
+  catch (err) {
+    ctx.status = 400;
+    ctx.body = {
+      status: 'error',
+      message: err.message || 'Sorry, an error has occurred.'
+    };
+  }
+});
+
 module.exports = router;

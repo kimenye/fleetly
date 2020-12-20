@@ -1,5 +1,6 @@
 import React, { Fragment, useState } from 'react';
 import Button from './common/Button';
+import { Link } from 'react-router-dom';
 import axios from 'axios';
 
 const Feature = ({ text }) => {
@@ -50,7 +51,8 @@ const SignUpForm = () => {
   if (user)
     return (
       <Fragment>
-        <h2 className="pt-6 text-base leading-6 font-bold sm:text-lg sm:leading-7 text-purple-600">Awesome! You'll be first to know when we're ready</h2>
+        <p className="pt-2 text-small text-purple-600">We'll let you know when we're finally ready but you can check out a sneak preview below.</p>
+        <Link to={ `/app/invites/${user.invitation_token}?email=${user.email}` } className="my-2 inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-purple-700 hover:bg-purple-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:bg-purple-100">Preview</Link>
       </Fragment>
     )
   else
@@ -84,7 +86,7 @@ function Hero() {
               </div>
               <div className="pt-6 text-base leading-6">
                 <p className="text-gray-700 text-small">Fleetly is currently in early access. Drop your email below
-                to be one of our early beta testers</p>
+                to be one of our early beta testers.</p>
                 <SignUpForm />
               </div>
             </div>

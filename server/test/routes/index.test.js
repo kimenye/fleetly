@@ -24,4 +24,17 @@ describe('routes : index', () => {
     });
   });
 
+  describe('GET /app', () => {
+    it('should redirect all paths with /app to the spa', (done) => {
+      chai.request(server)
+        .get('/app/invites/0000-0000?email=example@domain.com')
+        .end((err, res) => {
+          should.not.exist(err);
+          res.status.should.eql(200);
+          res.type.should.eql('text/html');
+          done();
+        });
+    });
+  });
+
 });

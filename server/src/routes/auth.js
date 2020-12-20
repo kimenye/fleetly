@@ -98,11 +98,14 @@ router.get('/auth/twitter/request', async (ctx) => {
 router.get('/auth/user', async (ctx) => {
   try {
     let { user_id } = ctx.session
-
+    console.log('Authenticating', user_id)
     if (user_id) {
       const user = await queries.findById(user_id);
       const tweets = await getTweetsForUserId(user_id);
       let usr = user[0]
+
+      console.log('User', usr)
+      console.log('Tweets', tweets)
 
       ctx.session.user = usr
       ctx.status = 200;
@@ -121,6 +124,7 @@ router.get('/auth/user', async (ctx) => {
     }
   }
   catch (err) {
+    console.log('Error verifying auth', err)
     ctx.status = 400;
     ctx.body = {
       status: 'error',

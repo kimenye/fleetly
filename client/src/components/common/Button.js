@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 
 const CheckIcon = () => {
   return (
@@ -17,10 +17,13 @@ const LoadIcon = () => {
   )
 }
 
-const Button = ({ text, onClick }) => {
+const Button = ({ text, onClick, loading }) => {
+
+  // let [loading, setLoading] = useState(false)
   return (
     <button type="button" onClick= { onClick } className="my-2 inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-purple-700 hover:bg-purple-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:bg-purple-100">
-      <CheckIcon />
+      { !loading && <CheckIcon /> }
+      { loading && <LoadIcon /> }
       { text }
     </button>
   )

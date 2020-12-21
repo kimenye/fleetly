@@ -21,6 +21,7 @@ const Feature = ({ text }) => {
 const SignUpForm = () => {
   const [email, setEmail] = useState("")
   const [user, setUser] = useState(null)
+  const [loading, setLoading] = useState(false)
 
   const createUser = async () => {
     try {
@@ -59,7 +60,7 @@ const SignUpForm = () => {
     return (
       <Fragment>
         <input type="email" placeholder="jane@example.com" onChange={e => setEmail(e.target.value)} required={true} className="mt-1 block w-full px-0.5 border-0 border-b-2 border-purple-200 hover:border-purple-500" />
-        <Button text='Sign Up' onClick={ register } />
+        <Button text='Sign Up' onClick={ register } loading={ loading } />
       </Fragment>
     )
 

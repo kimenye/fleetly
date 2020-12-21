@@ -212,7 +212,7 @@ const LoadButton = ({ onClick, user_id }) => {
       const result = await axios.post(`${process.env.REACT_APP_BASE_URL}/api/v1/users/${user_id}/fetchTweets`)
       console.log('Result', result);
 
-      onClick(result);
+      onClick(result.data.tweets);
       setLoading(false);
     }
   }

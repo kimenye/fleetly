@@ -193,18 +193,6 @@ const LoadButton = ({ onClick, user_id }) => {
     "cursor-wait": loading
   })
 
-  async function loadTweets() {
-    // const result = await axios.get(`${process.env.REACT_APP_BASE_URL}/auth/user`);
-    // setUser(result.data.data)
-
-    const result = await axios.post(`${process.env.REACT_APP_BASE_URL}/api/v1/users/${user_id}/fetchTweets`)
-    console.log('Result', result);
-
-    onClick(result);
-  }
-
-  // fetchUser();
-
   const load = async () => {
     if (!loading) {
       setLoading(true);

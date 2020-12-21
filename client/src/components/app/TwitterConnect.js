@@ -10,10 +10,12 @@ const Banner = (props) => {
   const [email, setEmail] = useState(props.email)
   const [name, setName] = useState("")
   const [user, setUser] = useState(null)
+  const [loading, setLoading] = useState(false)
   let { token } = props
 
   const verifyToken = async (props) => {
     try {
+      setLoading(true)
       const result = await axios.get(`${process.env.REACT_APP_BASE_URL}/api/v1/users/invites/${token}?email=${email}`);
       const status = result.status;
       if (status === 200) {
@@ -32,6 +34,7 @@ const Banner = (props) => {
     } catch(err) {
       console.log('Error', err);
       alert('Invalid email or authentication token. Please confirm and try again');
+      setLoading(false)
     }
 
   }
@@ -79,7 +82,7 @@ const Banner = (props) => {
                   </div>
                 </div>
                 <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
-                  <Button text='Connect with Twitter' onClick={ verifyAndConnectToTwitter } />
+                  <Button text='Connect with Twitter' onClick={ verifyAndConnectToTwitter } loading={ loading } />
                 </div>
               </div>
             </form>

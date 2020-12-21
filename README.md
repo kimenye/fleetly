@@ -29,5 +29,5 @@ cd fleetly
 
 This project has two main components:
 
-* Node JS Backend built with Koa and Postgres (server)
-* JS Frontend built with React (client)
+* Node JS Backend built with Koa and Postgres ([server](https://github.com/kimenye/fleetly/tree/main/server))
+* JS Frontend built with React ([client](https://github.com/kimenye/fleetly/tree/main/client))

@@ -95,6 +95,16 @@ router.get('/auth/twitter/request', async (ctx) => {
   }
 });
 
+router.post('/auth/user/logout', (ctx) => {
+  ctx.session.user = null
+  ctx.session.user_id = null
+
+  ctx.status = 200
+  ctx.body = {
+    success: 'success'
+  }
+});
+
 router.get('/auth/user', async (ctx) => {
   try {
     let { user_id } = ctx.session
@@ -119,7 +129,7 @@ router.get('/auth/user', async (ctx) => {
       ctx.status = 400;
       ctx.body = {
         status: 'error',
-        message: err.message || 'No user is available in session'
+        message: 'No user is available in session'
       };
     }
   }

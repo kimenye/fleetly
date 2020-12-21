@@ -23,7 +23,7 @@ const requestToken = () => {
     // console.log('Requesting token');
     consumer().getOAuthRequestToken((err, token, secret, results) => {
       if (err) {
-        console.log('Error in requesting', sys.inspect(error), results);
+        console.log('Error in requesting', err, results);
         reject(err);
       }
       else {

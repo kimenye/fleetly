@@ -25,14 +25,17 @@ const SignUpForm = () => {
 
   const createUser = async () => {
     try {
+      setLoading(true);
       const result = await axios.post(`${process.env.REACT_APP_BASE_URL}/api/v1/users`, { email: email });
       const status = result.status;
       if (status === 201) {
         let { data } = result.data
         let saved = data[0]
         setUser(saved)
+        setLoading(false)
       }
     } catch(err) {
+      setLoading(false);
       if (err.response.status === 422)
         setUser({ email: email })
       else

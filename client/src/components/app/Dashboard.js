@@ -197,10 +197,8 @@ const LoadButton = ({ onClick, user_id }) => {
     if (!loading) {
       setLoading(true);
 
-      const result = await axios.post(`${process.env.REACT_APP_BASE_URL}/api/v1/users/${user_id}/fetchTweets`)
-      console.log('Result', result);
-
-      onClick(result.data.tweets);
+      const result = await axios.post(`${process.env.REACT_APP_BASE_URL}/api/v1/users/${user_id}/fetchTweets`);
+      onClick(result.data.data.tweets);
       setLoading(false);
     }
   }

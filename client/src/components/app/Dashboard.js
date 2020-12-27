@@ -1,9 +1,11 @@
 import React, { Fragment, useState, useEffect } from 'react';
 import { withRouter } from "react-router-dom";
-import { getUser } from "../../redux/actions";
 import axios from "axios";
-const cx = require('classnames');
+import { format, isToday } from "date-fns";
+import { Link } from 'react-router-dom';
+import useGlobal from "../../store";
 
+const cx = require('classnames');
 
 const ProfileMenu = ({ user, logout }) => {
 
@@ -57,6 +59,7 @@ const TopNavBar = ({ user, logout }) => {
             <div className="hidden sm:block sm:ml-6">
               <div className="flex space-x-4">
                 <a href="#" className="bg-purple-900 text-white px-3 py-2 rounded-md text-sm font-medium">Dashboard</a>
+                <Link to={ `charts` } className="text-white hover:bg-purple-400 px-3 py-2 rounded-md text-sm font-medium">Charts</Link>
                 { /*<a href="#" className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Team</a>
                 <a href="#" className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Projects</a>
                 <a href="#" className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Calendar</a> */}
@@ -91,10 +94,17 @@ const TopNavBar = ({ user, logout }) => {
   )
 }
 
+const DateStr = ({ date }) => {
+  const dtStr = isToday(date) ? format(date, 'h:mm bb') : format(date, 'd MMM h:mm bb');
+  return (
+    <div className="text-sm text-gray-900">{ dtStr }</div>
+  )
+}
+
 const TweetRow = ({ tweet }) => {
   return (
     <tr>
-      <td className="px-6 py-4 whitespace-nowrap">
+      <td className="px-6 py-4">
         {/*<div className="flex items-center">
           <div className="flex-shrink-0 h-10 w-10">
             <img className="h-10 w-10 rounded-full" src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&amp;ixid=eyJhcHBfaWQiOjEyMDd9&amp;auto=format&amp;fit=facearea&amp;facepad=4&amp;w=256&amp;h=256&amp;q=60" alt="" />
@@ -108,7 +118,7 @@ const TweetRow = ({ tweet }) => {
             </div>
           </div>
         </div>*/}
-        <div className="text-sm text-gray-900">{ new Date(tweet.tweeted_at).toDateString() }</div>
+        <DateStr date={ new Date(tweet.tweeted_at) } />
       </td>
       <td className="px-6 py-4 whitespace-nowrap">
         <div className="text-sm text-gray-900">{ tweet.text }</div>
@@ -184,7 +194,7 @@ const Loader = () => {
   )
 }
 
-const LoadButton = ({ onClick, user_id }) => {
+const LoadButton = ({ actions, userId }) => {
 
   const [loading, setLoading] = useState(false);
 
@@ -196,9 +206,7 @@ const LoadButton = ({ onClick, user_id }) => {
   const load = async () => {
     if (!loading) {
       setLoading(true);
-
-      const result = await axios.post(`${process.env.REACT_APP_BASE_URL}/api/v1/users/${user_id}/fetchTweets`);
-      onClick(result.data.data.tweets);
+      actions.fetchTweets(userId);
       setLoading(false);
     }
   }
@@ -215,33 +223,19 @@ const LoadButton = ({ onClick, user_id }) => {
 
 const Dashboard = ({ props }) => {
 
-  const [user, setUser] = useState({});
-  const [tweets, setTweets] = useState([]);
+  const [globalState, globalActions] = useGlobal();
+  const { tweets, user } = globalState;
 
   useEffect(() => {
-
-    async function fetchUser() {
-      const result = await axios.get(`${process.env.REACT_APP_BASE_URL}/auth/user`);
-      const response = result.data;
-      setUser(response.user);
-      setTweets(response.tweets);
-    }
-
-    fetchUser();
-
+    globalActions.fetchUserAndTweets();
   }, [])
 
   const logout = async () => {
-    const result = await axios.post(`${process.env.REACT_APP_BASE_URL}/auth/user/logout`);
-
-    if (result.success == 'success') {
-      setTweets([]);
-      setUser(null);
-    }
+    globalActions.logout();
     window.location.replace("/")
   }
 
-  let tweetsLoaded = tweets.length > 0
+  let tweetsLoaded = tweets.length > 0;
 
   return (
     <>
@@ -254,7 +248,7 @@ const Dashboard = ({ props }) => {
             {
               !tweetsLoaded &&
               <div className="loadTweets">
-                <LoadButton onClick={ setTweets } user_id={ user.id } />
+                <LoadButton userId={ user.id } actions={ globalActions } />
               </div>
             }
           </h1>

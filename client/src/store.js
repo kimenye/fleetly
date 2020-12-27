@@ -3,6 +3,7 @@ import useGlobalHook from 'use-global-hook';
 import * as actions from './actions';
 
 const initialState = {
+  dataFetched: false,
   user: {},
   tweets: []
 }

@@ -1,4 +1,4 @@
-const { groupByDate } = require('../src/util');
+const { groupByDate, getUniqueItems } = require('../src/util');
 
 
 test('Can group items by date', () => {
@@ -24,4 +24,11 @@ test('Can group items by date', () => {
     ],
     '2020-02-04': [ { tweeted_at: '2020-02-04T12:31:24.000' } ]
   });
-})
+});
+
+test('Get unique items in array', () => {
+  let values = [1,1,4,5,3];
+
+  let result = getUniqueItems(values)
+  expect(result).toEqual([1,4,5,3]);
+});

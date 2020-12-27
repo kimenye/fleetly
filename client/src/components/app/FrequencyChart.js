@@ -3,15 +3,16 @@ import TopNavBar from '../common/TopNavBar';
 import useGlobal from "../../store";
 import { format } from "date-fns";
 import Calendar from "react-github-contribution-calendar";
-
-const { groupByDate } = require('../../util');
+import chroma from 'chroma-js';
+import { groupByDate, getUniqueItems } from '../../util';
 
 const FrequencyChart = () => {
 
   const [globalState, globalActions] = useGlobal();
   const { user, tweets, dataFetched } = globalState;
-  const [ chartData, setChartData ] = useState({});
-
+  const [ chartData, setChartData ] = useState(null);
+  // const [ panelColors, setPanelColors ] = useState([])
+  let chartVisible = chartData != null;
 
   const getFrequencyData = () => {
     if (tweets.length > 0) {
@@ -21,28 +22,31 @@ const FrequencyChart = () => {
         grouped[day] = data[day].length
       })
       setChartData(grouped);
+      getPanelColors();
     }
+  }
 
+  const getPanelColors = () => {
+    if (chartData != null) {
+      let values = getUniqueItems(Object.values(chartData)).sort();
+      let colors = chroma.scale(['#DDDDDD','#391768']).mode('lch').colors(values.length);
+
+      let panelColors = {};
+      colors.forEach((color, idx) => {
+        panelColors[idx] = color
+      })
+      return panelColors;
+    }
+    else
+      return []
   }
 
   useEffect(() => {
     if (!dataFetched) {
       globalActions.fetchUserAndTweets();
-      getFrequencyData();
     }
   }, []);
 
-  let chartVisible = chartData != null
-  let panelColors = [
-    '#EEEEEE',
-    '#C5BFD7',
-    '#BCB0DE',
-    '#9684CA',
-    '#5B42A4',
-    '#7F389A',
-    '#4D1363',
-    '#2A0339'
-  ];
 
   return (
     <>
@@ -58,8 +62,12 @@ const FrequencyChart = () => {
       </header>
       <main>
         <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
-          <h3 className="leading-tight text-gray-900 my-4">Tweet Frequency <small className="block text-gray-800">How have you been tweeting in the given period</small></h3>
-          { chartVisible && <Calendar values={chartData} until={ format(new Date(), 'y-M-d') } panelColors={ panelColors } /> }
+          { chartVisible &&
+            <>
+              <h3 className="leading-tight text-gray-900 my-4">Tweet Frequency <small className="block text-gray-800">How have you been tweeting in the given period</small></h3>
+              <Calendar values={chartData} until={ format(new Date(), 'y-M-d') } panelColors={ getPanelColors() } />
+            </>
+          }
         </div>
       </main>
     </>

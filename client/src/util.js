@@ -12,5 +12,9 @@ module.exports = {
       }
     });
     return groups;
+  },
+
+  getUniqueItems: (data) => {
+    return data.filter((v, i, a) => a.indexOf(v) === i)
   }
 }
